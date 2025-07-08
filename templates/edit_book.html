@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block title %}Modifier le Livre{% endblock %}
+
+{% block content %}
+    <h2>Modifier le livre</h2>
+    <form method="POST">
+        <label for="title">Titre :</label><br>
+        <input type="text" id="title" name="title" value="{{ book[1] }}" required><br><br>
+
+        <label for="author">Auteur :</label><br>
+        <input type="text" id="author" name="author" value="{{ book[2] }}" required><br><br>
+
+        <label for="year">Année :</label><br>
+        <input type="number" id="year" name="year" value="{{ book[3] }}"><br><br>
+
+        <label for="rating">Note :</label><br>
+        <input type="number" step="0.1" id="rating" name="rating" value="{{ book[4] }}"><br><br>
+
+        <label for="status">Statut :</label><br>
+        <select id="status" name="status" required>
+            <option value="Disponible" {% if book[5] == 'Disponible' %}selected{% endif %}>Disponible</option>
+            <option value="Emprunté" {% if book[5] == 'Emprunté' %}selected{% endif %}>Emprunté</option>
+            <option value="Réservé" {% if book[5] == 'Réservé' %}selected{% endif %}>Réservé</option>
+        </select><br><br>
+
+        <button type="submit">Mettre à jour</button>
+    </form>
+
+    <p><a href="{{ url_for('list_books') }}">Retour à la liste des livres</a></p>
+{% endblock %}

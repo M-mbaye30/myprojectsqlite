@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+
+{% block title %} List of books {% endblock %}
+
+{% block content %}
+    <h2>List of Books</h2>
+    {% if books %}
+        <table border="1" cellpadding="5" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Year</th>
+                    <th>Rating</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <td>{{ book.id }}</td>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ book.year }}</td>
+                    <td>{{ book.rating }}</td>
+                    <td>{{ book.status }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_book', id=book.id) }}">Edit</a>
+                        <a href="{{ url_for('delete_book', id=book.id) }}">Delete</a>
+                    </td>
+                        
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No books found.</p>
+    {% endif %}
+    <p><a href="{{ url_for('add_book') }}">Add a new book</a></p>
+    <p><a href="{{ url_for('home') }}">Back to Home</a></p>
+{% endblock %}

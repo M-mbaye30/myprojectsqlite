@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+
+{% block title %}Add a Library {% endblock %}
+
+{% block content %}
+    <h2>Add a new Library</h2>
+    <form method="POST">
+        <label for="name"> Name :</label><br>
+        <input type="text" id="name" Name="name" required><br><br>
+
+        <label for="created_by">Created by :</label><br>
+        <input type="text" id="created_by" name="created_by" required><br><br>
+
+        <label for="date_of_creation">Date of Creation :</label><br>
+        <input type="date" id="date_of_creation" name="date_of_creation" required><br><br>
+
+        <label for="city">City :</label><br>
+        <input type="text" id="city" name="city" required><br><br>
+
+        <label for="country">Country :</label><br>
+        <input type="text" id="country" name="country" required><br><br>    
+            
+        </select><br><br>
+
+        <button type="submit"> Add a library</button>
+    </form>
+{% endblock %}

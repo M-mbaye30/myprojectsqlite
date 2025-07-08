@@ -1,0 +1,98 @@
+body {
+    font-family: Arial, sans-serif; 
+    background-color: #f7f3f3;
+    margin: 20px;
+
+    
+}
+
+h1 {
+    color: #007BFF; /* MonGestionnaire */
+    text-align: left;
+}
+/*la partie suivante est pour le style des titres list of ...*/
+h2 {
+    color: #36b39e;
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 0 10px #ccc;
+}
+
+th, td {
+    padding: 10px; 
+    text-align: left; 
+    border-bottom: 1px solid #dddddd;  /* cette partie permet de créer une ligne de séparation entre les lignes du tableau */
+}
+
+th {
+    background-color: #007BFF;
+    color: white;
+}
+
+a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+button, input, select {
+    font-size: 1em;
+    padding: 8px;
+    margin-top: 5px; /* commentaire */
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+/* Footer styles */
+footer {
+    background-color: #f1f1f1;
+    padding: 20px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+.homepage-image {
+    text-align: right;
+    margin-top: 20px;
+
+}
+.homepage-image img {
+    max-width: 200px; /* Adjust the size as needed */
+    height: auto;
+    border-radius: 20px; /* Optional: adds rounded corners to the image */
+}
+
+form {
+    text-align: center;
+    margin: 20px 0;
+}
+
+input[type="text"] {
+    width: 300px;
+    padding: 8px;
+    font-size: 16px;
+}
+
+button {
+    padding: 8px 12px;
+    font-size: 16px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}

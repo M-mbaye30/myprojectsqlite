@@ -1,0 +1,52 @@
+{% extends 'layout.html' %}
+
+{% block title %}List of Prices{% endblock %}
+
+{% block content %}
+    <h2>List of Prices</h2>
+    {% if prices %}
+        <table border="1" cellpadding="5" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Senegal</th>
+                    <th>Senegal Currency</th>                   
+                    <th>France</th>
+                    <th>France Currency</th>
+                    <th>Canada</th>
+                    <th>Canada Currency</th>
+                    <th>Maroc</th>
+                    <th>Maroc Currency</th>
+                    <th>Arabie Saoudite</th>
+                    <th>Arabie Saoudite Currency</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for price in prices %}
+                <tr>
+                    <td>{{ price.id }}</td>
+                    <td>{{ price.senegal }}</td>
+                    <td>{{ price.senegal_currency }}</td>
+                    <td>{{ price.france }}</td>
+                    <td>{{ price.france_currency }}</td>
+                    <td>{{ price.canada }}</td>
+                    <td>{{ price.canada_currency }}</td>
+                    <td>{{ price.maroc }}</td>
+                    <td>{{ price.maroc_currency }}</td>
+                    <td>{{ price.arabi_saoudite }}</td>
+                    <td>{{ price.arabi_saoudite_currency }}</td>
+                    <td>
+                        <a href="{{ url_for('price', id=price.id) }}">Edit</a>
+                        <a href="{{ url_for('delete_price', id=price.id) }}">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No prices found.</p>
+    {% endif %}
+    <p><a href="{{ url_for('add_price') }}">Add a new price</a></p>
+    <p><a href="{{ url_for('home') }}">Back to Home</a></p>
+{% endblock %}

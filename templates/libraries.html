@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block title %}List of Libraries{% endblock %}
+
+{% block content %}
+    <h2>List of Libraries</h2>
+    {% if libraries %}
+        <table border="1" cellpadding="5" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Created by</th>
+                    <th>Date of Creation</th>
+                    <th>City</th>
+                    <th>Country</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for library in libraries %}
+                <tr>
+                    <td>{{ library.id }}</td>
+                    <td>{{ library.name }}</td>
+                    <td>{{ library.created_by }}</td>
+                    <td>{{ library.date_of_creation }}</td>
+                    <td>{{ library.city }}</td>
+                    <td>{{ library.country }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_library', id=library.id) }}">Edit</a>
+                        <a href="{{ url_for('delete_library', id=library.id) }}">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No libraries found.</p>
+    {% endif %}
+    <p><a href="{{ url_for('add_library') }}">Add a new library</a></p>
+    <p><a href="{{ url_for('home') }}">Back to Home</a></p>
+{% endblock %}

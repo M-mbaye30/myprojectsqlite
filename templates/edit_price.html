@@ -1,0 +1,41 @@
+{% exetends 'layout.html'%}
+
+{% block title %}Add Price{% endblock %}
+
+{% block content %}
+    <h2>Add Price</h2>
+    <form method="POST" action="{{ url_for('add_price') }}">
+        <label for="senegal">Senegal:</label>
+        <input type="text" id="senegal" name="senegal" required><br>
+
+        <label for="senegal_currency">Senegal Currency:</label>
+        <input type="text" id="senegal_currency" name="senegal_currency" required><br>
+
+        <label for="france">France:</label>
+        <input type="text" id="france" name="france" required><br>
+
+        <label for="france_currency">France Currency:</label>
+        <input type="text" id="france_currency" name="france_currency" required><br>
+
+        <label for="canada">Canada:</label>
+        <input type="text" id="canada" name="canada"><br>
+
+        <label for="canada_currency">Canada Currency:</label>
+        <input type="text" id="canada_currency" name="canada_currency"><br>
+
+        <label for="maroc">Maroc:</label>
+        <input type="text" id="maroc" name="maroc"><br>
+
+        <label for="maroc_currency">Maroc Currency:</label>
+        <input type="text" id="maroc_currency" name="maroc_currency"><br>
+
+        <label for="arabi_saoudite">Arabi Saoudite:</label>
+        <input type="text" id="arabi_saoudite" name="arabi_saoudite"><br>
+
+        <label for="arabi_saoudite_currency">Arabi Saoudite Currency:</label>
+        <input type="text" id="arabi_saoudite_currency" name="arabi_saoudite_currency"><br>
+
+        <button type="submit">Add Price</button>
+    </form>
+    <p><a href="{{ url_for('prices') }}">Back to Prices List</a></p>
+{% endblock %}

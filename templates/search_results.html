@@ -1,0 +1,38 @@
+{% extends 'layout.html' %}
+
+{% block title %}Résultats de recherche{% endblock %}
+
+{% block content %}
+    <h2>Résultats pour "{{ query }}"</h2>
+
+    {% if results_books %}
+        <table border="1" cellpadding="5" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Titre</th>
+                    <th>Auteur</th>
+                    <th>Année</th>
+                    <th>Note</th>
+                    <th>Statut</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in results_books %}
+                <tr>
+                    <td>{{ book[0] }}</td>
+                    <td>{{ book[1] }}</td>
+                    <td>{{ book[2] }}</td>
+                    <td>{{ book[3] }}</td>
+                    <td>{{ book[4] }}</td>
+                    <td>{{ book[5] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Aucun résultat trouvé.</p>
+    {% endif %}
+
+    <p><a href="{{ url_for('home') }}">Retour à la page d’accueil</a></p>
+{% endblock %}
