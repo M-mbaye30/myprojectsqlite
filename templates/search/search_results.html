@@ -3,37 +3,95 @@
 {% block title %}Résultats de recherche{% endblock %}
 
 {% block content %}
-    <h2>Résultats pour "{{ query }}"</h2>
+    <main class="container mt-4">
+        <h2>Résultats pour "{{ query }}"</h2>
 
-    {% if results_books %}
-        <table border="1" cellpadding="5" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Titre</th>
-                    <th>Auteur</th>
-                    <th>Année</th>
-                    <th>Note</th>
-                    <th>Statut</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for book in results_books %}
-                <tr>
-                    <td>{{ book[0] }}</td>
-                    <td>{{ book[1] }}</td>
-                    <td>{{ book[2] }}</td>
-                    <td>{{ book[3] }}</td>
-                    <td>{{ book[4] }}</td>
-                    <td>{{ book[5] }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>Aucun résultat trouvé.</p>
-    {% endif %}
+        <h3>Livres</h3>
+        {% if results_books %}
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th><th>Titre</th><th>Auteur</th><th>Année</th><th>Note</th><th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for book in results_books %}
+                        <tr>
+                            <td>{{ book.id }}</td>
+                            <td>{{ book.title }}</td>
+                            <td>{{ book.author }}</td>
+                            <td>{{ book.year }}</td>
+                            <td>{{ book.rating }}</td>
+                            <td>{{ book.status }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>Aucun livre trouvé.</p>
+        {% endif %}
 
-    <p><a href="{{ url_for('home') }}">Retour à la page d’accueil</a></p>
+        <hr>
+
+        <h3>Bibliothèques</h3>
+        {% if results_libraries %}
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th><th>Nom</th><th>Créée par</th><th>Date</th><th>Ville</th><th>Pays</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for library in results_libraries %}
+                        <tr>
+                            <td>{{ library.id }}</td>
+                            <td>{{ library.name }}</td>
+                            <td>{{ library.created_by }}</td>
+                            <td>{{ library.date_of_creation }}</td>
+                            <td>{{ library.city }}</td>
+                            <td>{{ library.country }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>Aucune bibliothèque trouvée.</p>
+        {% endif %}
+
+        <hr>
+
+        <h3>Prix</h3>
+        {% if results_prices %}
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th><th>Sénégal</th><th>Devise Sénégal</th><th>France</th><th>Devise France</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for price in results_prices %}
+                        <tr>
+                            <td>{{ price.id }}</td>
+                            <td>{{ price.senegal }}</td>
+                            <td>{{ price.senegal_currency }}</td>
+                            <td>{{ price.france }}</td>
+                            <td>{{ price.france_currency }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>Aucun prix trouvé.</p>
+        {% endif %}
+
+        <div class="mt-4">
+            <a href="{{ url_for('home') }}" class="btn btn-secondary">Retour à l'accueil</a>
+        </div>
+    </main>
 {% endblock %}
-<!-- This template displays the search results for books. It shows the query and the results in a table format. -->

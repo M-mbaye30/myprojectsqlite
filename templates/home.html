@@ -1,35 +1,42 @@
-{% extends 'layout.html'%}
+{% extends 'layout.html' %}
 
-{% block title%} Home {% endblock%}
+{% block title %}Accueil{% endblock %}
 
 {% block content %}
-<h2>Welcome to My Book Manager</h2>
-<p>This is a simple application to manage your books, libraries, and prices.</p>
-<p>Use the navigation links to add books, libraries, and prices, or to search for books.</p>
-<p>Feel free to explore and manage your book collection!</p>
+<main class="container mt-4">
+    <header class="text-center mb-5">
+        <h1>Bienvenue sur Mon Gestionnaire de Livres</h1>
+        <p class="lead">Une application simple pour gérer vos livres, vos bibliothèques et vos prix.</p>
+    </header>
 
-<ul>
-    <li> manage the list of book: add, update, delete</li>
-    <li> manage the list of libraries: add, update, delete</li>
-    <li> manage the list of prices: add, update, delete</li>
-    
- 
-</ul>
-<p>To get started, click on the "Add a book" link in the navigation menu.</p>
-<p>For more information about the application, click on the "About" link.</p>
-<p>If you have any questions or feedback, feel free to contact us.</p>
-<p>Thank you for using My Book Manager!</p>
-<p>Happy reading!</p>
+    <section class="features-list mb-5">
+        <h3>Fonctionnalités principales :</h3>
+        <ul>
+            <li>Gérer la liste des livres : ajouter, modifier, supprimer.</li>
+            <li>Gérer la liste des bibliothèques : ajouter, modifier, supprimer.</li>
+            <li>Gérer la liste des prix : ajouter, modifier, supprimer.</li>
+        </ul>
+    </section>
 
-<div class="homepage-image">
-    <img src="{{ url_for('static', filename='book.png') }}" alt="Book Manager Logo">
-</div>
+    <section class="start-info mb-5">
+        <p>Pour commencer, cliquez sur le lien "Ajouter un livre" dans le menu de navigation.</p>
+        <p>Pour en savoir plus sur l'application, cliquez sur le lien "À propos".</p>
+    </section>
 
-<form method="GET" action="{{ url_for('search') }}">
-    <label for="search">Search</label>
-    <input type="text" id="search" name="query" placeholder="Search for a book, library, or price">
-    <button type="submit">Search</button>
-</form>
+    <div class="text-center mb-5">
+        <p>Merci d'utiliser Mon Gestionnaire de Livres !</p>
+        <p>Bonne lecture ! 📚</p>
+    </div>
 
+    <div class="homepage-image text-center mb-5">
+        <img src="{{ url_for('static', filename='book.png') }}" alt="Logo du gestionnaire de livres" class="img-fluid">
+    </div>
 
+    <form method="GET" action="{{ url_for('search') }}" class="search-form">
+        <div class="input-group mb-3">
+            <input type="text" id="search" name="query" class="form-control" placeholder="Rechercher un livre, une bibliothèque ou un prix" aria-label="Recherche">
+            <button type="submit" class="btn btn-primary">Rechercher</button>
+        </div>
+    </form>
+</main>
 {% endblock %}

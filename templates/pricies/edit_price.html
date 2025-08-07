@@ -1,41 +1,65 @@
-{% exetends 'layout.html'%}
+{% extends 'layout.html' %}
 
-{% block title %}Add Price{% endblock %}
+{% block title %}Ajouter un Prix{% endblock %}
 
 {% block content %}
-    <h2>Add Price</h2>
-    <form method="POST" action="{{ url_for('add_price') }}">
-        <label for="senegal">Senegal:</label>
-        <input type="text" id="senegal" name="senegal" required><br>
+    <h2>Ajouter un nouveau prix</h2>
+    <form method="POST">
+        <div>
+            <label for="senegal">Prix au Sénégal :</label>
+            <input type="text" id="senegal" name="senegal" required>
+        </div>
 
-        <label for="senegal_currency">Senegal Currency:</label>
-        <input type="text" id="senegal_currency" name="senegal_currency" required><br>
+        <div>
+            <label for="senegal_currency">Devise au Sénégal :</label>
+            <input type="text" id="senegal_currency" name="senegal_currency" required>
+        </div>
 
-        <label for="france">France:</label>
-        <input type="text" id="france" name="france" required><br>
+        <div>
+            <label for="france">Prix en France :</label>
+            <input type="text" id="france" name="france" required>
+        </div>
 
-        <label for="france_currency">France Currency:</label>
-        <input type="text" id="france_currency" name="france_currency" required><br>
+        <div>
+            <label for="france_currency">Devise en France :</label>
+            <input type="text" id="france_currency" name="france_currency" required>
+        </div>
 
-        <label for="canada">Canada:</label>
-        <input type="text" id="canada" name="canada"><br>
+        <div>
+            <label for="canada">Prix au Canada :</label>
+            <input type="text" id="canada" name="canada">
+        </div>
 
-        <label for="canada_currency">Canada Currency:</label>
-        <input type="text" id="canada_currency" name="canada_currency"><br>
+        <div>
+            <label for="canada_currency">Devise au Canada :</label>
+            <input type="text" id="canada_currency" name="canada_currency">
+        </div>
 
-        <label for="maroc">Maroc:</label>
-        <input type="text" id="maroc" name="maroc"><br>
+        <div>
+            <label for="maroc">Prix au Maroc :</label>
+            <input type="text" id="maroc" name="maroc">
+        </div>
 
-        <label for="maroc_currency">Maroc Currency:</label>
-        <input type="text" id="maroc_currency" name="maroc_currency"><br>
+        <div>
+            <label for="maroc_currency">Devise au Maroc :</label>
+            <input type="text" id="maroc_currency" name="maroc_currency">
+        </div>
 
-        <label for="arabi_saoudite">Arabi Saoudite:</label>
-        <input type="text" id="arabi_saoudite" name="arabi_saoudite"><br>
+        <div>
+            <label for="arabi_saoudite">Prix en Arabie Saoudite :</label>
+            <input type="text" id="arabi_saoudite" name="arabi_saoudite">
+        </div>
 
-        <label for="arabi_saoudite_currency">Arabi Saoudite Currency:</label>
-        <input type="text" id="arabi_saoudite_currency" name="arabi_saoudite_currency"><br>
+        <div>
+            <label for="arabi_saoudite_currency">Devise en Arabie Saoudite :</label>
+            <input type="text" id="arabi_saoudite_currency" name="arabi_saoudite_currency">
+        </div>
 
-        <button type="submit">Add Price</button>
+        <div class="form-actions">
+            <button type="submit">Ajouter le prix</button>
+            <a href="{{ url_for('list_prices') }}">
+                <button type="button">Annuler</button>
+            </a>
+        </div>
     </form>
-    <p><a href="{{ url_for('prices') }}">Back to Prices List</a></p>
 {% endblock %}

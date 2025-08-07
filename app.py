@@ -1,248 +1,246 @@
-
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, g
 import sqlite3
 
+app = Flask(__name__)
+DATABASE = 'books.db'
 
-app = Flask (__name__)
+# Configuration de la base de données SQLite
+def get_db_connection():
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect(DATABASE)
+        db.row_factory = sqlite3.Row
+    return db
+# --- Gestion de la connexion à la base de données ---
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
+# --- Exécution des requêtes SQL ---
+def execute_query(query, params=None, fetch_all=False):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        if params:
+            cursor.execute(query, params)
+        else:
+            cursor.execute(query)
+        
+        if fetch_all:
+            return cursor.fetchall()
+        
+        conn.commit()
+        return True
+    except sqlite3.Error as e:
+        print(f"Erreur lors de l'exécution de la requête : {e}")
+        conn.rollback()
+        return False
+    
 @app.route('/')
 def home():
     return render_template('home.html')
 
+# --- Routes pour la gestion des livres ---
 
-# This route will display the list of books from the database
 @app.route('/books')
 def list_books():
-    conn= sqlite3.connect('books.db')
-    conn.row_factory = sqlite3.Row # This allows us to access columns by name
-    cursor = conn.cursor()
-    cursor.execute(' SELECT * FROM books')
-    books= cursor.fetchall()
-    conn.close()
-    return render_template('books.html', books=books) 
+    books = execute_query('SELECT * FROM books', fetch_all=True)
+    return render_template('books/books.html', books=books)
 
-@app.route('/add_book', methods=['GET', 'POST'])
+@app.route('/books/add')
 def add_book():
-    # This route will handle the form submission to add a new book # # Récupération des données du formulaire
-    if request.method == 'POST':
-        title = request.form['title']
-        author = request.form['author']
-        year = request.form['year']
-        rating = request.form['rating']
-        status = request.form['status']
-        # Connect to the database and insert the new book
-        
-        conn = sqlite3.connect('books.db')
-        cursor = conn.cursor()
-        cursor.execute('INSERT INTO books (title, author, year, rating, status) VALUES (?, ?, ?, ?, ?)', (title, author, year, rating, status))
-        conn.commit()
-        conn.close()
-        
+    return render_template('books/add_book.html')
+
+@app.route('/books/add_book', methods=['POST'])
+def save_add_book():
+    title = request.form['title']
+    author = request.form['author']
+    year = request.form['year']
+    rating = request.form['rating']
+    status = request.form['status']
+    
+    query = 'INSERT INTO books (title, author, year, rating, status) VALUES (?, ?, ?, ?, ?)'
+    params = (title, author, year, rating, status)
+    
+    if execute_query(query, params):
         return redirect(url_for('list_books'))
     
-    return render_template('add_book.html')
-@app.route('/edit_book/<int:id>', methods=['GET', 'POST'])
+    return "Erreur lors de l'ajout du livre", 500
+
+@app.route('/books/edit/<int:id>', methods=['GET', 'POST'])
 def edit_book(id):
-    conn = sqlite3.connect('books.db')
-    cursor = conn.cursor()
     if request.method == 'POST':
-        # On récupère les nouvelles valeurs
         title = request.form['title']
         author = request.form['author']
         year = request.form.get('year')
         rating = request.form.get('rating')
         status = request.form['status']
 
-        # Mise à jour dans la BDD
-        cursor.execute('''
-            UPDATE books
-            SET title = ?, author = ?, year = ?, rating = ?, status = ?
-            WHERE id = ?
-        ''', (title, author, year, rating, status, id))
-        conn.commit()
-        conn.close()
-        return redirect(url_for('list_books'))
-    else:
-        # On récupère le livre existant pour pré-remplir le formulaire
-        cursor.execute('SELECT * FROM books WHERE id = ?', (id,))
-        book = cursor.fetchone()
-        conn.close()
-        if book:
-            return render_template('edit_book.html', book=book)
-        else:
-            return "Livre non trouvé", 404
+        query = 'UPDATE books SET title = ?, author = ?, year = ?, rating = ?, status = ? WHERE id = ?'
+        params = (title, author, year, rating, status, id)
+
+        if execute_query(query, params):
+            return redirect(url_for('list_books'))
+    
+    book = execute_query('SELECT * FROM books WHERE id = ?', (id,), fetch_all=True)
+    if book:
+        return render_template('books/edit_book.html', book=book[0])
+    
+    return "Livre non trouvé", 404
         
-@app.route('/delete_book/<int:id>')
+@app.route('/books/delete/<int:id>')
 def delete_book(id):
-    conn= sqlite3.connect('books.db')
-    cursor= conn.cursor()
-    cursor.execute('DELETE FROM books WHERE id = ?', (id,))
-    conn.commit()
-    conn.close()
-    return redirect(url_for('list_books'))
+    query = 'DELETE FROM books WHERE id = ?'
+    if execute_query(query, (id,)):
+        return redirect(url_for('list_books'))
+    
+    return "Erreur lors de la suppression", 500
 
-@app.route('/library')
-def library():
-    conn= sqlite3.connect('books.db')
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM library')
-    libraries = cursor.fetchall()
-    conn.close()
-    return render_template('libraries.html', libraries=libraries)
+# --- Routes pour la gestion des bibliothèques ---
+@app.route('/libraries')
+def list_libraries():
+    libraries = execute_query('SELECT * FROM library', fetch_all=True)
+    return render_template('libraries/libraries.html', libraries=libraries)
 
-@app.route('/add_library', methods=['GET', 'POST'])
+@app.route('/libraries/add')
 def add_library():
-    if request.method == 'POST':
-        name = request.form['name']
-        created_by = request.form['created_by']
-        date_of_creation = request.form['date_of_creation']
-        city = request.form['city']
-        country = request.form['country']
-# Connect to the database and insert the new library
-        conn = sqlite3.connect('books.db')
-        cursor = conn.cursor()
-        cursor.execute('INSERT INTO library (name, created_by, date_of_creation, city, country) VALUES (?, ?, ?, ?, ?)', (name, created_by, date_of_creation, city, country))
-        conn.commit()
-        conn.close()
-# Redirect to the libraries page after adding the library
-        return redirect(url_for('library'))
-# If the request method is GET, render the add_library template
+    return render_template('libraries/add_library.html')
+
+@app.route('/libraries/add_library', methods=['POST'])
+def save_add_library():
+    name = request.form['name']
+    created_by = request.form['created_by']
+    date_of_creation = request.form['date_of_creation']
+    city = request.form['city']
+    country = request.form['country']
     
-    return render_template('add_library.html')
-
-@app.route('/edit_library/<int:id>', methods=['GET', 'POST'])
-def edit_library(id):
-    conn = sqlite3.connect('books.db')
-    cursor = conn.cursor()
-    if request.method == 'POST':
-        # On récupère les nouvelles valeurs
-        name = request.form['name']
-        created_by = request.form['created_by']
-        date_of_creation = request.form['date_of_creation']
-        city = request.form['city']
-        country = request.form['country']
-
-        # Mise à jour dans la BDD
-        cursor.execute('''
-            UPDATE library
-            SET name = ?, created_by = ?, date_of_creation = ?, city = ?, country = ?
-            WHERE id = ?
-        ''', (name, created_by, date_of_creation, city, country, id))
-        conn.commit()
-        conn.close()
-        return redirect(url_for('library'))
-    else:
-        # On récupère la bibliothèque existante pour pré-remplir le formulaire
-        cursor.execute('SELECT * FROM library WHERE id = ?', (id,))
-        library = cursor.fetchone()
-        conn.close()
-        if library:
-            return render_template('edit_library.html', library=library)
-        else:
-            return "Library not found", 404
-@app.route('/delete_library/<int:id>')
-def delete_library(id):
-    conn = sqlite3.connect('books.db')
-    cursor = conn.cursor()
-    cursor.execute('DELETE FROM library WHERE id = ?', (id,))
-    conn.commit()
-    conn.close()
-    return redirect(url_for('library'))
-
-@app.route('/prices')
-def prices():
-    conn = sqlite3.connect('books.db')
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM price')
-    prices = cursor.fetchall()
-    conn.close()
-    return render_template('prices.html', prices=prices)   
-@app.route('/add_price', methods=['GET', 'POST'])
-def add_price():
-    if request.method == 'POST':
-        senegal = request.form['senegal']
-        senegal_currency = request.form['senegal_currency']
-        france = request.form['france']
-        france_currency = request.form['france_currency']
-        canada = request.form['canada']
-        canada_currency = request.form['canada_currency']
-        maroc = request.form['maroc']
-        maroc_currency = request.form['maroc_currency']
-        arabi_saoudite = request.form['arabi_saoudite']
-        arabi_saoudite_currency = request.form['arabi_saoudite_currency']
-
-        conn = sqlite3.connect('books.db')
-        cursor = conn.cursor()
-        cursor.execute('INSERT INTO price (senegal, senegal_currency, france, france_currency, canada, canada_currency, maroc, maroc_currency, arabi_saoudite, arabi_saoudite_currency) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
-                       (senegal, senegal_currency, france, france_currency, canada, canada_currency, maroc, maroc_currency, arabi_saoudite, arabi_saoudite_currency))
-        conn.commit()
-        conn.close()
+    query = 'INSERT INTO library (name, created_by, date_of_creation, city, country) VALUES (?, ?, ?, ?, ?)'
+    params = (name, created_by, date_of_creation, city, country)
+    
+    if execute_query(query, params):
+        return redirect(url_for('list_libraries'))
         
-        return redirect(url_for('prices'))
-    
-    return render_template('add_price.html')
-@app.route('/price/<int:id>', methods=['GET', 'POST'])
-def price(id):
-    conn = sqlite3.connect('books.db')
-    cursor = conn.cursor()
+    return "Erreur lors de l'ajout de la bibliothèque", 500
+
+@app.route('/libraries/edit/<int:id>', methods=['GET', 'POST'])
+def edit_library(id):
     if request.method == 'POST':
-        senegal = request.form['senegal']
-        senegal_currency = request.form['senegal_currency']
-        france = request.form['france']
-        france_currency = request.form['france_currency']
-        canada = request.form['canada']
-        canada_currency = request.form['canada_currency']
-        maroc = request.form['maroc']
-        maroc_currency = request.form['maroc_currency']
-        arabi_saoudite = request.form['arabi_saoudite']
-        arabi_saoudite_currency = request.form['arabi_saoudite_currency']
+        name = request.form['name']
+        created_by = request.form['created_by']
+        date_of_creation = request.form['date_of_creation']
+        city = request.form['city']
+        country = request.form['country']
+        
+        query = 'UPDATE library SET name = ?, created_by = ?, date_of_creation = ?, city = ?, country = ? WHERE id = ?'
+        params = (name, created_by, date_of_creation, city, country, id)
+        
+        if execute_query(query, params):
+            return redirect(url_for('list_libraries'))
+            
+    library = execute_query('SELECT * FROM library WHERE id = ?', (id,), fetch_all=True)
+    if library:
+        return render_template('libraries/edit_library.html', library=library[0])
+    
+    return "Bibliothèque non trouvée", 404
 
-        cursor.execute('''
-            UPDATE price
-            SET senegal = ?, senegal_currency = ?, france = ?, france_currency = ?, canada = ?, canada_currency = ?, maroc = ?, maroc_currency = ?, arabi_saoudite = ?, arabi_saoudite_currency = ?
-            WHERE id = ?
-        ''', (senegal, senegal_currency, france, france_currency, canada, canada_currency, maroc, maroc_currency, arabi_saoudite, arabi_saoudite_currency, id))
-        conn.commit()
-        conn.close()
-        return redirect(url_for('prices'))
-    else:
-        cursor.execute('SELECT * FROM price WHERE id = ?', (id,))
-        price = cursor.fetchone()
-        conn.close()
-        if price:
-            return render_template('edit_price.html', price=price)
-        else:
-            return "Price not found", 404
-@app.route('/delete_price/<int:id>')
+@app.route('/libraries/delete/<int:id>')
+def delete_library(id):
+    query = 'DELETE FROM library WHERE id = ?'
+    if execute_query(query, (id,)):
+        return redirect(url_for('list_libraries'))
+    
+    return "Erreur lors de la suppression", 500
+
+# --- Routes pour la gestion des prix ---
+@app.route('/pricies')
+def list_prices():
+    prices = execute_query('SELECT * FROM price', fetch_all=True)
+    return render_template('pricies/prices.html', prices=prices)
+
+@app.route('/pricies/add')
+def add_price():
+    return render_template('pricies/add_price.html')
+
+@app.route('/pricies/add_price', methods=['POST'])
+def save_add_price():
+    form_data = {key: request.form[key] for key in request.form}
+    
+    query = 'INSERT INTO price ({}) VALUES ({})'.format(
+        ', '.join(form_data.keys()),
+        ', '.join(['?'] * len(form_data))
+    )
+    params = tuple(form_data.values())
+
+    if execute_query(query, params):
+        return redirect(url_for('list_prices'))
+    
+    return "Erreur lors de l'ajout du prix", 500
+
+@app.route('/pricies/edit/<int:id>', methods=['GET', 'POST'])
+def edit_price(id):
+    if request.method == 'POST':
+        form_data = {key: request.form[key] for key in request.form}
+        
+        set_clause = ', '.join([f"{key} = ?" for key in form_data.keys()])
+        query = f'UPDATE price SET {set_clause} WHERE id = ?'
+        params = tuple(list(form_data.values()) + [id])
+
+        if execute_query(query, params):
+            return redirect(url_for('list_prices'))
+    
+    price = execute_query('SELECT * FROM price WHERE id = ?', (id,), fetch_all=True)
+    if price:
+        return render_template('pricies/edit_price.html', price=price[0])
+    
+    return "Prix non trouvé", 404
+
+@app.route('/pricies/delete/<int:id>')
 def delete_price(id):
-    conn = sqlite3.connect('books.db')
-    cursor = conn.cursor()
-    cursor.execute('DELETE FROM price WHERE id = ?', (id,))
-    conn.commit()
-    conn.close()
-    return redirect(url_for('prices'))
+    query = 'DELETE FROM price WHERE id = ?'
+    if execute_query(query, (id,)):
+        return redirect(url_for('list_prices'))
+    
+    return "Erreur lors de la suppression", 500
 
-# Search functionality
+# ---recherche ---
 @app.route('/search')
 def search():
-    query = request.args.get('query', '')
-    if not query:
-        return redirect(url_for('list_books'))
+    query_text = request.args.get('query', '')
+    
+    # Si la requête est vide, rediriger vers une page de résultats vide.
+    if not query_text:
+        return render_template('search/search_results.html', 
+                               query=query_text, 
+                               results_books=[],
+                               results_libraries=[],
+                               results_prices=[])
 
-    conn = sqlite3.connect('books.db')
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
+    # Recherche dans les livres (titre, auteur)
+    books_query = 'SELECT * FROM books WHERE title LIKE ? OR author LIKE ?'
+    books_params = ('%' + query_text + '%', '%' + query_text + '%')
+    results_books = execute_query(books_query, books_params, fetch_all=True)
 
-    cursor.execute("SELECT * FROM books WHERE title LIKE ? OR author LIKE ?", 
-                   ('%' + query + '%', '%' + query + '%'))
-    results_books = cursor.fetchall()
+    # Recherche dans les bibliothèques (nom, ville, pays)
+    libraries_query = 'SELECT * FROM library WHERE name LIKE ? OR city LIKE ? OR country LIKE ?'
+    libraries_params = ('%' + query_text + '%', '%' + query_text + '%', '%' + query_text + '%')
+    results_libraries = execute_query(libraries_query, libraries_params, fetch_all=True)
 
-    conn.close()
+    # Recherche dans les prix (devise)
+    prices_query = 'SELECT * FROM price WHERE senegal_currency LIKE ? OR france_currency LIKE ? OR canada_currency LIKE ?'
+    prices_params = ('%' + query_text + '%', '%' + query_text + '%', '%' + query_text + '%')
+    results_prices = execute_query(prices_query, prices_params, fetch_all=True)
 
-    return render_template('search_results.html', query=query, results_books=results_books)
+    return render_template('search/search_results.html',
+                           query=query_text,
+                           results_books=results_books,
+                           results_libraries=results_libraries,
+                           results_prices=results_prices)
+
+@app.route('/about')
+def about():
+    """Affiche la page À propos."""
+    return render_template('about.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-    

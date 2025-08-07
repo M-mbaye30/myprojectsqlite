@@ -1,27 +1,40 @@
 {% extends 'layout.html' %}
 
-{% block title %}Add a Library {% endblock %}
+{% block title %}Ajouter une Bibliothèque{% endblock %}
 
 {% block content %}
-    <h2>Add a new Library</h2>
+    <h2>Ajouter une nouvelle bibliothèque</h2>
     <form method="POST">
-        <label for="name"> Name :</label><br>
-        <input type="text" id="name" Name="name" required><br><br>
+        <div>
+            <label for="name">Nom :</label>
+            <input type="text" id="name" name="name" required>
+        </div>
 
-        <label for="created_by">Created by :</label><br>
-        <input type="text" id="created_by" name="created_by" required><br><br>
+        <div>
+            <label for="created_by">Créée par :</label>
+            <input type="text" id="created_by" name="created_by" required>
+        </div>
 
-        <label for="date_of_creation">Date of Creation :</label><br>
-        <input type="date" id="date_of_creation" name="date_of_creation" required><br><br>
+        <div>
+            <label for="date_of_creation">Date de création :</label>
+            <input type="date" id="date_of_creation" name="date_of_creation" required>
+        </div>
 
-        <label for="city">City :</label><br>
-        <input type="text" id="city" name="city" required><br><br>
+        <div>
+            <label for="city">Ville :</label>
+            <input type="text" id="city" name="city" required>
+        </div>
 
-        <label for="country">Country :</label><br>
-        <input type="text" id="country" name="country" required><br><br>    
-            
-        </select><br><br>
-
-        <button type="submit"> Add a library</button>
+        <div>
+            <label for="country">Pays :</label>
+            <input type="text" id="country" name="country" required>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit">Ajouter la bibliothèque</button>
+            <a href="{{ url_for('list_libraries') }}">
+                <button type="button">Annuler</button>
+            </a>
+        </div>
     </form>
 {% endblock %}

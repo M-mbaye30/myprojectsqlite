@@ -1,25 +1,40 @@
-{% extends 'layout.html'%}
+{% extends 'layout.html' %}
 
-{% block title %}Edit Library{% endblock %}
+{% block title %}Modifier la Bibliothèque{% endblock %}
 
 {% block content %}
-    <h2>Edit Library</h2>
+    <h2>Modifier la bibliothèque</h2>
     <form method="POST">
-        <label for="name">Name:</label><br>
-        <input type="text" id="name" name="name" value="{{ library.name }}" required><br><br>
+        <div>
+            <label for="name">Nom :</label>
+            <input type="text" id="name" name="name" value="{{ library.name }}" required>
+        </div>
 
-        <label for="created_by">Created by:</label><br>
-        <input type="text" id="created_by" name="created_by" value="{{ library.created_by }}" required><br><br>
+        <div>
+            <label for="created_by">Créée par :</label>
+            <input type="text" id="created_by" name="created_by" value="{{ library.created_by }}" required>
+        </div>
 
-        <label for="date_of_creation">Date of Creation:</label><br>
-        <input type="date" id="date_of_creation" name="date_of_creation" value="{{ library.date_of_creation }}" required><br><br>
+        <div>
+            <label for="date_of_creation">Date de création :</label>
+            <input type="date" id="date_of_creation" name="date_of_creation" value="{{ library.date_of_creation }}" required>
+        </div>
 
-        <label for="city">City:</label><br>
-        <input type="text" id="city" name="city" value="{{ library.city }}" required><br><br>
+        <div>
+            <label for="city">Ville :</label>
+            <input type="text" id="city" name="city" value="{{ library.city }}" required>
+        </div>
 
-        <label for="country">Country:</label><br>
-        <input type="text" id="country" name="country" value="{{ library.country }}" required><br><br>
+        <div>
+            <label for="country">Pays :</label>
+            <input type="text" id="country" name="country" value="{{ library.country }}" required>
+        </div>
 
-        <button type="submit">Update Library</button>
+        <div class="form-actions">
+            <button type="submit">Mettre à jour la bibliothèque</button>
+            <a href="{{ url_for('list_libraries') }}">
+                <button type="button">Annuler</button>
+            </a>
+        </div>
     </form>
 {% endblock %}
