@@ -24,21 +24,6 @@ Cette application web permet de gérer efficacement une bibliothèque avec trois
 - **Frontend** : HTML/CSS avec templates Jinja2
 - **Architecture** : MVC (Model-View-Controller)
 
-## 📦 Installation
-
-### Prérequis
-- Python 3.6+
-### Étapes d'installation
-
-## 🚀 Utilisation
-
-### Lancement de l'application
-
-```bash
-python app.py
-```
-
-L'application sera accessible sur `http://localhost:5000`
 
 ### Navigation
 
@@ -96,17 +81,6 @@ ML_Project/
 
 ## 🔧 Personnalisation
 
-## 📊 Exemples d'utilisation
-
-### Ajout d'un livre via l'interface
-1. Aller sur `/add_book`
-2. Remplir le formulaire :
-   - Titre : "Le Petit Prince"
-   - Auteur : "Antoine de Saint-Exupéry"
-   - Année : 1943
-   - Note : 4.5
-   - Statut : "Lu"
-3. Cliquer sur "Ajouter"
 
 ### Recherche de livres
 1. Utiliser la barre de recherche
