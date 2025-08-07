@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+
+{% block title %}À propos - Mouhamed Mbaye{% endblock %}
+
+{% block content %}
+    <main class="container mt-4">
+        <header class="text-center">
+            <h1 class="display-4">À propos de l'application</h1>
+            <p class="lead">Un projet de gestion de livres développé par un passionné de l'IA.</p>
+        </header>
+
+        <section class="mt-5">
+            <h2 class="mb-3">Qui je suis</h2>
+            <p>
+                Bonjour 👋, je suis Mouhamed, un passionné du Traitement du Langage Naturel (NLP), des données linguistiques et de l'intelligence artificielle. J'explore le croisement entre le langage et les données pour en extraire des informations précieuses. Ce projet est le fruit de ma volonté d'appliquer ces compétences pour créer des solutions web concrètes.
+            </p>
+        </section>
+
+        <hr>
+
+        <section class="mt-5">
+            <h2 class="mb-3">Technologies et fonctionnalités</h2>
+            <p>Cette application a été conçue pour vous aider à gérer votre collection de livres de manière simple et efficace. Elle vous permet de :</p>
+            <ul>
+                <li><strong>Gérer les Livres</strong> : Ajouter, modifier et supprimer des livres avec leurs détails (titre, auteur, note, statut).</li>
+                <li><strong>Gérer les Bibliothèques</strong> : Organiser vos bibliothèques par lieu et date de création.</li>
+                <li><strong>Gérer les Prix</strong> : Suivre les prix des livres dans différentes devises.</li>
+                <li><strong>Recherche unifiée</strong> : Effectuer des recherches instantanées sur l'ensemble de vos données.</li>
+            </ul>
+            <p>Les technologies utilisées pour la construction de ce projet sont :</p>
+            <ul>
+                <li>Flask: Un micro-framework web en Python.</li>
+                <li>Jinja2delete : Le moteur de templates pour l'affichage des pages web.</li>
+                <li>SQLite: Une base de données légère pour stocker toutes les informations.</li>
+                <li>HTML/CSS : Pour la structure et le style de l'interface utilisateur.</li>
+            </ul>
+        </section>
+
+        <hr>
+
+        <section class="mt-5 text-center">
+            <h2 class="mb-3">Connectons-nous !</h2>
+            <p>N'hésitez pas à me contacter pour toute question, suggestion ou collaboration.</p>
+            <div class="social-links mt-4">
+                <a href="https://github.com/M-mbaye30" target="_blank" class="btn btn-dark mx-2" aria-label="Mon profil GitHub">
+                    GitHub
+                </a>
+                <a href="https://www.linkedin.com/in/mouhamed-mbaye-nlp-tal/" target="_blank" class="btn btn-primary mx-2" aria-label="Mon profil LinkedIn">
+                    LinkedIn
+                </a>
+                <a href="mailto:mouhamedmbaye371@gmail.com" class="btn btn-info mx-2" aria-label="Mon adresse e-mail">
+                    mouhamedmbaye371@gmail.com
+                </a>
+            </div>
+        </section>
+        
+        <div class="mt-5 text-center">
+            <a href="{{ url_for('home') }}" class="btn btn-secondary">Retour à l'accueil</a>
+        </div>
+    </main>
+{% endblock %}
